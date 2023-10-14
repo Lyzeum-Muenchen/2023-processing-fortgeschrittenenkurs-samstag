@@ -1,7 +1,12 @@
+// https://github.com/Lyzeum-Muenchen/2023-processing-fortgeschrittenenkurs-samstag
+
+
 // Spielerposition und Grösse
 int x, y, w, h;
 int pSpeed = 10;
 boolean leftPressed, rightPressed;
+Item item;
+
 
 void setup() {
 
@@ -10,6 +15,7 @@ void setup() {
   y = 700;
   w = 80;
   h = 80;
+  item = new Item(275, -100, 10);
 }
 
 void keyPressed() {
@@ -49,6 +55,7 @@ void draw() {
       x = width - w;
     }
   }
+  item.update();
   
   // Zeichnen
   background(20, 100, 200); // rot, gruen, blau: Werte von 0-255
@@ -57,5 +64,5 @@ void draw() {
   fill(255, 0, 0); // rot
   rect(x, y, w, h);
   
-  
+  item.draw();
 }
