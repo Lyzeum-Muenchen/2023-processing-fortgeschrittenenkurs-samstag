@@ -25,6 +25,14 @@ public class Item {
   }
   
   public boolean intersects(int px, int py, int pw, int ph) {
+    // item_left < p_right
+    // item_right > p_left
+    // item_top < p_bottom
+    
+    // item_bottom > p_top
+    if (x < px + pw && x + w > px && y < py + ph && y + h > py) {
+      return true;
+    }
     return false;
   }
 }
