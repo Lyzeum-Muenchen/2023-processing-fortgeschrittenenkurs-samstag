@@ -1,18 +1,20 @@
 
-public class Item {
+public abstract class Item {
   private int x, y, w, h;
   private int speed;
-  private PImage image;
-  private boolean isVisible;
+  // protected: Variable in dieser und jeder Unterklasse sichtbar
+  protected PImage image; 
+  protected boolean isVisible;
   
-  public Item(int x, int y, int speed, boolean isVisible) {
+  public Item(int x, int y, int speed, boolean isVisible, 
+    PImage image) {
     this.x = x;
     this.y = y;
     this.speed = speed;
     this.isVisible = isVisible; // ist Item im Spiel sichtbar
     w = 50;
     h = 50;
-    image = loadImage("icons//coin.png");
+    this.image = image;
   }
   
   public void update() {
@@ -36,10 +38,9 @@ public class Item {
     }
   }
   // Event, falls Item mit Spieler kollidiert
-  public void onCollide() {
-    score++;
-    isVisible = false;
-  }
+  // abstrakte Methode: Unterklasse muss diese Funktion 
+  // implementieren
+  public abstract void onCollide(); 
   
   public boolean intersects(int px, int py, int pw, int ph) {
     // item_left < p_right

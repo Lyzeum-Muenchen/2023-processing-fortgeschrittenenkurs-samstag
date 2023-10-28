@@ -21,16 +21,20 @@ Item[] items = new Item[10];
 int score;
 Random r = new Random();
 int counterNewItem;
+int lives;
+PImage iconHeart;
 
 void setup() {
 
   size(600, 800); // Fenstergroesse, 1920 * 1080
+  iconHeart = loadImage("icons//heart.png");
   x = 260;
   y = 700;
   w = 80;
   h = 80;
+  lives = 1;
   for (int i = 0; i < items.length; i++) {
-    items[i] = new Item(275, -100, 10, false);
+    items[i] = new Coin(275, -100, 10, false);
   }
   
 }
@@ -54,7 +58,13 @@ void spawnItem() {
     // ausseren 5 Pixel nicht als Spawnpunkt
     int x = 5 + r.nextInt(width - w - 10); 
     int speed = 10 + r.nextInt(5); // 10-14
-    items[freeIndex] = new Item(x, y, speed, true);
+    
+    int randomNumber = r.nextInt(2); // Zahlen 0 und 1 moeglich
+    if (randomNumber == 0) {
+      items[freeIndex] = new Coin(x, y, speed, true);
+    }else if(randomNumber == 1) {
+      items[freeIndex] = new Bomb(x, y, speed, true);
+    }
   }
 }
 
@@ -121,6 +131,10 @@ void draw() {
     items[i].draw();
   }
   
+  for (int i = 0; i < lives; i++) {
+    image(iconHeart, 10 + i * 60, 30, 50, 50);
+  }
+  
   fill(255); // gleich wie fill(255, 255, 255);
   textSize(50);
   textAlign(CENTER);
@@ -129,7 +143,7 @@ void draw() {
 
 void drawTestItem() {
    // Testroutine Kollision
-  Item itemTest = new Item(500, 300, 0, true);
+  Item itemTest = new Coin(500, 300, 0, true);
   if (itemTest.intersects(mouseX, mouseY, 50, 50)) {
     //println("Kollision");
     stroke(250, 0, 0); // rot
