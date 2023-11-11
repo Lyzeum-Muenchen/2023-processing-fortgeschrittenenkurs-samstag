@@ -6,8 +6,8 @@ public class Coin extends Item {
     
   }
   
-  public void onCollide() {
-    score++;
+  public void onCollide(Player p) {
+    p.score++;
     isVisible = false;
   }
 }

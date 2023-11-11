@@ -14,25 +14,33 @@ import java.util.Random;
 // - Koopmodus (Bombe alle 25 Punkte verfuegbar)
 
 // Spielerposition und Groesse
-int x, y, w, h;
-int pSpeed = 10;
-boolean leftPressed, rightPressed;
+
 Item[] items = new Item[10];
-int score;
+
 Random r = new Random();
 int counterNewItem;
-int lives;
 PImage iconHeart;
+Player player1;
+// Wahrscheinlichkeiten fuer Punktzahl 0 bis 50
+// Muenze, Bombe, Medikit, gr. Bombe, Container
+// Eisblock, Feuerball, Minimuenze, Schatzkiste, Zufallsbox
+
+// Hausaufgabe 11.11.23: Bilder zeichnen:
+// - Eisblock
+// - Feuerball
+// - Schatzkiste (Rechteckig)
+// - Zufallsbox
+// --> Quadratisch (128 x 128 Pixel)
+// --> Rechteckig (256 x 128 Pixel)
+int[] probRound50 = new int[]{50, 15, 13, 0, 0, 10, 10, 0, 0, 2};
 
 void setup() {
 
   size(600, 800); // Fenstergroesse, 1920 * 1080
   iconHeart = loadImage("icons//heart.png");
-  x = 260;
-  y = 700;
-  w = 80;
-  h = 80;
-  lives = 1;
+  
+  player1 = new Player();
+  
   for (int i = 0; i < items.length; i++) {
     items[i] = new Coin(275, -100, 10, false);
   }
@@ -71,45 +79,21 @@ void spawnItem() {
 void keyPressed() {
   //println(key);
   //println(keyCode);
-  // 37: linke Pfeiltaste
-  // 39: rechte Pfeiltaste
-  if (keyCode == 37) {
-    leftPressed = true;
-  }
-  if (keyCode == 39) {
-    rightPressed = true;
-  }
+  player1.keyPressed();
 }
 
 void keyReleased() {
-  if (keyCode == 37) {
-    leftPressed = false;
-  }
-  if (keyCode == 39) {
-    rightPressed = false;
-  }
+  player1.keyReleased();
 }
 
 void draw() {
   //Gamelogik/Updatelogik
+  player1.update();
   
-  if (leftPressed == true) {
-    x -= pSpeed;
-    if (x < 0) {
-      x = 0;
-    }
-  }
-  if (rightPressed == true) {
-    x += pSpeed;
-    if (x + w > width) {
-      x = width - w;
-    }
-    // height
-  }
   for (int i = 0; i < items.length; i++) {
     items[i].update();
-    if (items[i].intersects(x, y, w, h)) {
-      items[i].onCollide();
+    if (items[i].intersects(player1)) {
+      items[i].onCollide(player1);
     }
   }
   // Spawne neue Items
@@ -122,36 +106,34 @@ void draw() {
   
   // Zeichnen
   background(20, 100, 200); // rot, gruen, blau: Werte von 0-255
-  // Spieler zeichnen
-  noStroke(); // ohne sichtbaren Rahmen zeichnen
-  fill(255, 0, 0); // rot
-  rect(x, y, w, h);
+  
+  player1.draw();
   
   for (int i = 0; i < items.length; i++) {
     items[i].draw();
   }
   
-  for (int i = 0; i < lives; i++) {
+  for (int i = 0; i < player1.lives; i++) {
     image(iconHeart, 10 + i * 60, 30, 50, 50);
   }
   
   fill(255); // gleich wie fill(255, 255, 255);
   textSize(50);
   textAlign(CENTER);
-  text(score + "", width/2, 80);
+  text(player1.score + "", width/2, 80);
 }
 
-void drawTestItem() {
-   // Testroutine Kollision
-  Item itemTest = new Coin(500, 300, 0, true);
-  if (itemTest.intersects(mouseX, mouseY, 50, 50)) {
-    //println("Kollision");
-    stroke(250, 0, 0); // rot
-  }else {
-    //println("Keine Kollision");
-    stroke(20, 250, 30); // gruen
-  }
-  itemTest.draw();
-  noFill();
-  rect(mouseX, mouseY, 50, 50);
-}
+//void drawTestItem() {
+//   // Testroutine Kollision
+//  Item itemTest = new Coin(500, 300, 0, true);
+//  if (itemTest.intersects(mouseX, mouseY, 50, 50)) {
+//    //println("Kollision");
+//    stroke(250, 0, 0); // rot
+//  }else {
+//    //println("Keine Kollision");
+//    stroke(20, 250, 30); // gruen
+//  }
+//  itemTest.draw();
+//  noFill();
+//  rect(mouseX, mouseY, 50, 50);
+//}

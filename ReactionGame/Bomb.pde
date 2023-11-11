@@ -5,9 +5,9 @@ public class Bomb extends Item {
     super(x, y, speed, isVisible, loadImage("icons//bomb.png"));
   }
   
-  public void onCollide() {
-    lives--;
-    score = score - 5;
+  public void onCollide(Player p) {
+    p.lives--;
+    p.score = p.score - 5;
     isVisible = false;
   }
 }

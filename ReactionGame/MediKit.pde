@@ -4,7 +4,12 @@ public class MediKit extends Item {
     super(x, y, speed, visible, loadImage("icons//medikit.png"));
   }
   
-  public void onCollide() {
-    // TODO
+  public void onCollide(Player p) {
+    if (p.lives < 3) {
+      p.lives++;
+    }else {
+      p.score += 3;
+    }
+    isVisible = false;
   }
 }

@@ -7,13 +7,19 @@ public abstract class Item {
   protected boolean isVisible;
   
   public Item(int x, int y, int speed, boolean isVisible, 
-    PImage image) {
+    PImage image){
+      // rufe zweiten Konstruktor auf mit hardkodierten Werten
+    this(x, y, 50, 50, speed, isVisible, image);
+  }
+  
+  public Item(int x, int y, int w, int h, int speed, 
+  boolean isVisible, PImage image) {
     this.x = x;
     this.y = y;
     this.speed = speed;
     this.isVisible = isVisible; // ist Item im Spiel sichtbar
-    w = 50;
-    h = 50;
+    this.w = w;
+    this.h = h;
     this.image = image;
   }
   
@@ -40,15 +46,15 @@ public abstract class Item {
   // Event, falls Item mit Spieler kollidiert
   // abstrakte Methode: Unterklasse muss diese Funktion 
   // implementieren
-  public abstract void onCollide(); 
+  public abstract void onCollide(Player p); 
   
-  public boolean intersects(int px, int py, int pw, int ph) {
+  public boolean intersects(Player p) {
     // item_left < p_right
     // item_right > p_left
     // item_top < p_bottom
     
     // item_bottom > p_top
-    if (isVisible && x < px + pw && x + w > px && y < py + ph && y + h > py) {
+    if (isVisible && x < p.x + p.w && x + w > p.x && y < p.y + p.h && y + h > p.y) {
       return true;
     }
     return false;
