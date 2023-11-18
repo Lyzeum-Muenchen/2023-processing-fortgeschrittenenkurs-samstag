@@ -12,3 +12,8 @@ Ressourcen:
     - Feuerball (128 x 128 Pixel)
     - Schatzkiste (256 x 128 Pixel)
     - Zufallsbox (128 x 128 Pixel)
+
+## Hausaufgabe vom 18.11.23
+
+- Implementation der Eisblock-Klasse:
+    - Spieler verlangsamt seine Geschwindigkeit um 30% für 15 Sekunden

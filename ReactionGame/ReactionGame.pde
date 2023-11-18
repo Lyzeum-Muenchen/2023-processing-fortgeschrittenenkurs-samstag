@@ -32,7 +32,10 @@ Player player1;
 // - Zufallsbox
 // --> Quadratisch (128 x 128 Pixel)
 // --> Rechteckig (256 x 128 Pixel)
-int[] probRound50 = new int[]{50, 15, 13, 0, 0, 10, 10, 0, 0, 2};
+int[] prob50 = new int[]{50, 15, 13, 0, 0, 10, 10, 0, 0, 2};
+String[] labels = new String[]{"Coin", "Bomb", "MediKit",
+  "Large Bomb", "Container", "Iceblock", "Fireball", 
+  "Mini Coin", "Treasure Chest", "Potion"};
 
 void setup() {
 
@@ -44,11 +47,20 @@ void setup() {
   for (int i = 0; i < items.length; i++) {
     items[i] = new Coin(275, -100, 10, false);
   }
-  
+  showProbabilities(prob50);
+} // ENDE setup()
+// gebe auf der Konsole Wahrscheinlichkeiten fuer Items aus
+void showProbabilities(int[] probs) {
+  int sum = 0;
+  for (int i = 0; i < labels.length; i++) {
+    println(labels[i] + ": " + probs[i] + "%");
+    sum += probs[i];
+  }
+  println("Sum Probabilities: " + sum + "%");
+  println("---------------");
 }
 
-void spawnItem() {
-  // 1.) finde freien Platz im Array
+public int getFreeIndex() {
   int freeIndex = -1;
   for (int i = 0; i < items.length; i++) {
     if (items[i].isVisible == false) {
@@ -56,23 +68,26 @@ void spawnItem() {
       break; // verlasse Schleife
     }
   }
-  
-  // 2.) Erstelle neues Item
+  return freeIndex;
+}
+
+void spawnItem() {
+  // 1.) finde freien Platz im Array
+  int freeIndex = getFreeIndex();
+  // 2.) Waehle Wahrscheinlichkeitsverteilung (Punktzahl abhaengig)
+  // 3.) Waehle zufaelligen Index
+  // 4.) Gebe zufaelliges Item zurueck
   // Falls Item erstellt werden kann
   if (freeIndex != -1) {
     int y = -100;
     int w = 50;
-    int h = 50;
     // ausseren 5 Pixel nicht als Spawnpunkt
     int x = 5 + r.nextInt(width - w - 10); 
     int speed = 10 + r.nextInt(5); // 10-14
-    
-    int randomNumber = r.nextInt(2); // Zahlen 0 und 1 moeglich
-    if (randomNumber == 0) {
-      items[freeIndex] = new Coin(x, y, speed, true);
-    }else if(randomNumber == 1) {
-      items[freeIndex] = new Bomb(x, y, speed, true);
-    }
+    // TODO 
+    items[freeIndex] = new Coin(x, y, speed, true);
+    // fuer die Hausaufgabe:
+    // items[freeIndex] = new IceBlock(x, y, speed, true);
   }
 }
 
