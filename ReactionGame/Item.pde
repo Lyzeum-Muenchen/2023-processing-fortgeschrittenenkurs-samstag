@@ -1,6 +1,6 @@
 
 public abstract class Item {
-  private int x, y, w, h;
+  protected int x, y, w, h;
   private int speed;
   // protected: Variable in dieser und jeder Unterklasse sichtbar
   protected PImage image; 

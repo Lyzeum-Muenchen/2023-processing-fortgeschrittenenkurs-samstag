@@ -70,24 +70,75 @@ public int getFreeIndex() {
   }
   return freeIndex;
 }
-
+// TODO Variable fuer Multiplayer
 void spawnItem() {
   // 1.) finde freien Platz im Array
   int freeIndex = getFreeIndex();
-  // 2.) Waehle Wahrscheinlichkeitsverteilung (Punktzahl abhaengig)
-  // 3.) Waehle zufaelligen Index
-  // 4.) Gebe zufaelliges Item zurueck
   // Falls Item erstellt werden kann
   if (freeIndex != -1) {
+    
+    // items[freeIndex] = new IceBlock(x, y, speed, true);
+    // 2.) Waehle Wahrscheinlichkeitsverteilung (Punktzahl abhaengig)
+    int[] probs = prob50;
+    // 3.) Waehle zufaelligen Index
+    int randomNumber = r.nextInt(100); // 0 bis 99
+    int sumProbs = 0;
+    int index = -1;
+    for (int i = 0; i < probs.length; i++) {
+      sumProbs += probs[i];
+      if (randomNumber < sumProbs) {
+        index = i;
+        break;
+      }
+    }
     int y = -100;
     int w = 50;
+    int h = 50;
+    if (index == 3) {
+      // large bomb
+      w = 80;
+      h = 80;
+      println("large Bomb");
+    }
+    if(index == 7) {
+      w = 25; // mini coin
+      h = 25;
+      println("Mini Coin");
+    }
     // ausseren 5 Pixel nicht als Spawnpunkt
     int x = 5 + r.nextInt(width - w - 10); 
     int speed = 10 + r.nextInt(5); // 10-14
-    // TODO 
-    items[freeIndex] = new Coin(x, y, speed, true);
-    // fuer die Hausaufgabe:
-    // items[freeIndex] = new IceBlock(x, y, speed, true);
+    
+    // 4.) Gebe zufaelliges Item zurueck
+    switch(index) {
+      case 0:
+        items[freeIndex] = new Coin(x, y, speed, true);
+        break;
+      case 1:
+        items[freeIndex] = new Bomb(x, y, speed, true);
+        break;
+      case 2:
+        items[freeIndex] = new MediKit(x, y, speed, true);
+        break;
+      case 3:
+         // large bomb
+        items[freeIndex] = new Bomb(x, y, w, h, speed, true);
+        break;
+      case 4:
+        // TODO Container
+      case 5:
+        // IceBlock
+        //items[freeIndex] = new IceBlock(x, y, speed, true);
+        break;
+      case 6:
+        // TODO FireBall
+        break;
+      case 7:
+        // MiniCoin, 3 Punkte
+        items[freeIndex] = new Coin(x, y, w, h, speed * 2, 3, true);
+        break;
+    }
+    
   }
 }
 
