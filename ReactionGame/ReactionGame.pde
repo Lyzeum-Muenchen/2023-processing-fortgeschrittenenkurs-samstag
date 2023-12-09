@@ -33,6 +33,7 @@ Player player1;
 // --> Quadratisch (128 x 128 Pixel)
 // --> Rechteckig (256 x 128 Pixel)
 int[] prob50 = new int[]{50, 15, 13, 0, 0, 10, 10, 0, 0, 2};
+int[] probTest = new int[]{0, 0, 0, 0, 0, 50, 50, 0, 0, 0};
 String[] labels = new String[]{"Coin", "Bomb", "MediKit",
   "Large Bomb", "Container", "Iceblock", "Fireball", 
   "Mini Coin", "Treasure Chest", "Potion"};
@@ -48,6 +49,7 @@ void setup() {
     items[i] = new Coin(275, -100, 10, false);
   }
   showProbabilities(prob50);
+  showProbabilities(probTest);
 } // ENDE setup()
 // gebe auf der Konsole Wahrscheinlichkeiten fuer Items aus
 void showProbabilities(int[] probs) {
@@ -80,6 +82,7 @@ void spawnItem() {
     // items[freeIndex] = new IceBlock(x, y, speed, true);
     // 2.) Waehle Wahrscheinlichkeitsverteilung (Punktzahl abhaengig)
     int[] probs = prob50;
+    probs = probTest;
     // 3.) Waehle zufaelligen Index
     int randomNumber = r.nextInt(100); // 0 bis 99
     int sumProbs = 0;
@@ -128,10 +131,11 @@ void spawnItem() {
         // TODO Container
       case 5:
         // IceBlock
-        //items[freeIndex] = new IceBlock(x, y, speed, true);
+        items[freeIndex] = new IceBlock(x, y, speed, true);
         break;
       case 6:
-        // TODO FireBall
+        // FireBall
+        items[freeIndex] = new FireBall(x, y, speed, true);
         break;
       case 7:
         // MiniCoin, 3 Punkte
