@@ -12,7 +12,7 @@ public class Bomb extends Item {
   
   public void onCollide(Player p) {
     p.lives--;
-    p.score = p.score - 5;
+    
     isVisible = false;
   }
 }

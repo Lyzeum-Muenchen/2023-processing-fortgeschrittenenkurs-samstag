@@ -21,6 +21,9 @@ Random r = new Random();
 int counterNewItem;
 PImage iconHeart;
 Player player1;
+GameState gameState = GameState.Running;
+GameOverMenu gameOverMenu = new GameOverMenu();
+
 // Wahrscheinlichkeiten fuer Punktzahl 0 bis 50
 // Muenze, Bombe, Medikit, gr. Bombe, Container
 // Eisblock, Feuerball, Minimuenze, Schatzkiste, Zufallsbox
@@ -33,7 +36,7 @@ Player player1;
 // --> Quadratisch (128 x 128 Pixel)
 // --> Rechteckig (256 x 128 Pixel)
 int[] prob50 = new int[]{50, 15, 13, 0, 0, 10, 10, 0, 0, 2};
-int[] probTest = new int[]{0, 0, 0, 0, 0, 50, 50, 0, 0, 0};
+int[] probTest = new int[]{0, 0, 0, 0, 50, 0, 0, 0, 50, 0};
 String[] labels = new String[]{"Coin", "Bomb", "MediKit",
   "Large Bomb", "Container", "Iceblock", "Fireball", 
   "Mini Coin", "Treasure Chest", "Potion"};
@@ -106,7 +109,11 @@ void spawnItem() {
     if(index == 7) {
       w = 25; // mini coin
       h = 25;
-      println("Mini Coin");
+    }
+    if (index == 8) {
+      // Treasure Chest
+      w = 100;
+      h = 50;
     }
     // ausseren 5 Pixel nicht als Spawnpunkt
     int x = 5 + r.nextInt(width - w - 10); 
@@ -128,7 +135,14 @@ void spawnItem() {
         items[freeIndex] = new Bomb(x, y, w, h, speed, true);
         break;
       case 4:
-        // TODO Container
+        // Container
+        int selectedSide = r.nextInt(3);
+        w = width / 3;
+        h = w /2; // Container ist doppelt so breit wie hoch
+        speed = 3 * speed;
+        x = selectedSide * w; // links, mitte oder rechts platziert
+        items[freeIndex] = new Container(x, y, w, h, speed, true);
+        break;
       case 5:
         // IceBlock
         items[freeIndex] = new IceBlock(x, y, speed, true);
@@ -140,6 +154,10 @@ void spawnItem() {
       case 7:
         // MiniCoin, 3 Punkte
         items[freeIndex] = new Coin(x, y, w, h, speed * 2, 3, true);
+        break;
+      case 8:
+        // TreasureChest
+        items[freeIndex] = new TreasureChest(x, y, w, h, speed, 5, true);
         break;
     }
     
@@ -156,9 +174,12 @@ void keyReleased() {
   player1.keyReleased();
 }
 
-void draw() {
+void drawRunningGame() {
   //Gamelogik/Updatelogik
   player1.update();
+  if (player1.lives <= 0) {
+    gameState = GameState.Completed;
+  }
   
   for (int i = 0; i < items.length; i++) {
     items[i].update();
@@ -184,13 +205,33 @@ void draw() {
   }
   
   for (int i = 0; i < player1.lives; i++) {
-    image(iconHeart, 10 + i * 60, 30, 50, 50);
+    image(iconHeart, 10 + i * 60, 80, 50, 50);
   }
   
   fill(255); // gleich wie fill(255, 255, 255);
   textSize(50);
   textAlign(CENTER);
-  text(player1.score + "", width/2, 80);
+  text(player1.score + "", width/2, 130);
+}
+
+void draw() {
+  if (gameState == GameState.Running) {
+    drawRunningGame();
+  }else if(gameState == GameState.Completed) {
+    background(20, 100, 200);
+    for (int i = 0; i < items.length; i++) {
+      items[i].update();
+      items[i].draw();
+    }
+    // Spawne neue Items
+    counterNewItem--;
+    if (counterNewItem <= 0){
+      counterNewItem = 60;
+      spawnItem();
+    }
+    
+    gameOverMenu.draw();
+  }
 }
 
 //void drawTestItem() {
