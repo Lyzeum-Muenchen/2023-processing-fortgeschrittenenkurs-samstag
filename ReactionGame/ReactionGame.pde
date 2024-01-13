@@ -40,17 +40,18 @@ int[] probTest = new int[]{0, 0, 0, 0, 50, 0, 0, 0, 50, 0};
 String[] labels = new String[]{"Coin", "Bomb", "MediKit",
   "Large Bomb", "Container", "Iceblock", "Fireball", 
   "Mini Coin", "Treasure Chest", "Potion"};
+  
+String highscorePath;
+int highscore;
 
 void setup() {
 
   size(600, 800); // Fenstergroesse, 1920 * 1080
   iconHeart = loadImage("icons//heart.png");
-  
-  player1 = new Player();
-  
-  for (int i = 0; i < items.length; i++) {
-    items[i] = new Coin(275, -100, 10, false);
-  }
+  // Highscore lesen
+  highscorePath = dataPath("highscore.txt"); // Datei im Projekt
+  highscore = Util.loadHighscore(highscorePath);
+  initGame();
   showProbabilities(prob50);
   showProbabilities(probTest);
 } // ENDE setup()
@@ -63,6 +64,18 @@ void showProbabilities(int[] probs) {
   }
   println("Sum Probabilities: " + sum + "%");
   println("---------------");
+}
+
+public void initGame() {
+  // Spieler zuruecksetzen
+  // Items zuruecksetzen
+  // GameState auf running setzen
+  player1 = new Player();
+  
+  for (int i = 0; i < items.length; i++) {
+    items[i] = new Coin(275, -100, 10, false);
+  }
+  gameState = GameState.Running;
 }
 
 public int getFreeIndex() {
@@ -168,6 +181,12 @@ void keyPressed() {
   //println(key);
   //println(keyCode);
   player1.keyPressed();
+  switch (gameState) {
+    case Completed:
+      gameOverMenu.keyPressed();
+      break;
+    default:
+  }
 }
 
 void keyReleased() {
@@ -179,6 +198,11 @@ void drawRunningGame() {
   player1.update();
   if (player1.lives <= 0) {
     gameState = GameState.Completed;
+    if (player1.score > highscore) {
+      highscore = player1.score; // alten Wert ueberschreiben
+      // Datei aendern
+      Util.saveHighscore(highscorePath, highscore);
+    }
   }
   
   for (int i = 0; i < items.length; i++) {

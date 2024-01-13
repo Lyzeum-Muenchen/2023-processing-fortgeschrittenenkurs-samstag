@@ -1,4 +1,4 @@
-public class GameOverMenu {
+public class GameOverMenu extends Menu {
 
 
   public GameOverMenu() {
@@ -16,5 +16,19 @@ public class GameOverMenu {
     fill(255); // weiss
     text("Game Over", width/2, height/4);
     text("Your Score: " + player1.score, width/2, height/2);
+    textSize(40);
+    text("Highscore: " + highscore, width/2, 200 + height/2);
+    text("Press SPACE to Restart", width/2, 280 + height/2);
+  }
+  
+  public void keyReleased() {
+  }
+  
+  public void keyPressed() {
+    // wenn Leertaste gedrueckt, dann neues Spiel starten
+    println(keyCode);
+    if (keyCode == 32) {
+      initGame();
+    }
   }
 }
