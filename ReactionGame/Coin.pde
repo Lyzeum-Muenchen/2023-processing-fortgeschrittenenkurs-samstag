@@ -15,5 +15,6 @@ public class Coin extends Item {
   public void onCollide(Player p) {
     p.score += points;
     isVisible = false;
+    soundCoin.play();
   }
 }

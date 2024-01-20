@@ -6,7 +6,6 @@ public static class Util {
   public static int loadHighscore(String path) {
     int highscore = 0;
     File f = new File(path);
-    
     if (f.exists()) {
       try {
         BufferedReader reader = new BufferedReader(
@@ -15,9 +14,7 @@ public static class Util {
         reader.close();
         highscore = Integer.parseInt(content);
       }catch (IOException ex) {
-        
       }catch (NumberFormatException e) {
-      
       }
     }
     return highscore;

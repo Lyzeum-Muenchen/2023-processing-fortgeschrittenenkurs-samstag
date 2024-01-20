@@ -1,4 +1,5 @@
 import java.util.Random;
+import processing.sound.SoundFile; // import notwendig für Sounds
 
 // https://github.com/Lyzeum-Muenchen/2023-processing-fortgeschrittenenkurs-samstag
 // Plaene:
@@ -23,6 +24,7 @@ PImage iconHeart;
 Player player1;
 GameState gameState = GameState.Running;
 GameOverMenu gameOverMenu = new GameOverMenu();
+SoundFile soundCoin;
 
 // Wahrscheinlichkeiten fuer Punktzahl 0 bis 50
 // Muenze, Bombe, Medikit, gr. Bombe, Container
@@ -54,7 +56,18 @@ void setup() {
   initGame();
   showProbabilities(prob50);
   showProbabilities(probTest);
+  initSounds();
 } // ENDE setup()
+
+void initSounds() {
+  String baseDir = "sounds/";
+  soundCoin = new SoundFile(this, baseDir + "coin.wav");
+  soundCoin.amp(0.5); // amplify: Lautstaerke von 0.0 bis 1.0
+  soundCoin.rate(1.0); // Abspielgeschwindigkeit: 1.0
+  soundCoin.cue(0.1); // Position in der Sounddatei in Sekunden, "Vorspulen"
+  
+}
+
 // gebe auf der Konsole Wahrscheinlichkeiten fuer Items aus
 void showProbabilities(int[] probs) {
   int sum = 0;
