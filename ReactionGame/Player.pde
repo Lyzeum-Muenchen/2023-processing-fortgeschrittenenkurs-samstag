@@ -8,6 +8,10 @@ public class Player {
   boolean isFreezing, isBurning;
   int effectDur; // effectDuration, 
   PImage iconFreeze;
+  PImage playerDefault, playerHappy, playerPain;
+  boolean faceRight;
+  int animState; // animationState, 0: Default, 1: Happy, 2: Pain
+  int animDur; // animationDuration
   
   public Player() {
     x = 260;
@@ -17,9 +21,27 @@ public class Player {
     lives = 1;
     score = 0;
     iconFreeze = loadImage("icons//max-icons//freeze7.png");
+    playerDefault = loadImage("icons//max-icons//PlayerPig.png");
+    playerHappy = loadImage("icons//max-icons//PlayerPigMONEY.png");
+    playerPain = loadImage("icons//max-icons//PlayerPigPAIN.png");
   }
-  
+  public void setPainAnimation(int duration) {
+    animState = 2;
+    animDur = duration;
+  }
+  public void setHappyAnimation() {
+    if (!isBurning && !isFreezing) {
+      animState = 1;
+      animDur = 30; // 30 Ticks = 0,5 Sekunden
+    }
+  }
   public void update() {
+    if (animDur > 0) {
+      animDur--;
+      if (animDur == 0) {
+        animState = 0; // auf Default setzen
+      }
+    }
     float baseSpeed = 1.0; // (Gleitkomma-) Zahlen, z.B. 0.5, - 3.0
     if (isFreezing) {
       baseSpeed = 0.7;
@@ -59,9 +81,13 @@ public class Player {
   }
   public void draw() {
     // Spieler zeichnen
-    noStroke(); // ohne sichtbaren Rahmen zeichnen
-    fill(255, 0, 0); // rot
-    rect(x, y, w, h);
+    PImage selImg = playerDefault;
+    if (animState == 1) {
+      selImg = playerHappy;
+    }else if(animState == 2) {
+      selImg = playerPain;
+    }
+    image(selImg, x, y, w, h);
     
     if (isFreezing) {
       image(iconFreeze, x - 10, y - 10, w + 20, h + 20);

@@ -10,6 +10,7 @@ public class MediKit extends Item {
     }else {
       p.score += 3;
     }
+    p.setHappyAnimation();
     isVisible = false;
   }
 }

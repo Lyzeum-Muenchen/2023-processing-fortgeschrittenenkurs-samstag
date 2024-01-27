@@ -10,6 +10,7 @@ public class FireBall extends Item {
     // ansonsten -3
     if (p.isFreezing) {
       p.isFreezing = false;
+      p.setHappyAnimation();
     }else {
       p.isBurning = true;
       if (p.score <= 15) {
@@ -17,6 +18,7 @@ public class FireBall extends Item {
       }else {
         p.effectDur = (p.score / 2) * 60;
       }
+      p.setPainAnimation(p.effectDur);
     }
     isVisible = false;
   }

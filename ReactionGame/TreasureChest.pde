@@ -12,6 +12,8 @@ public class TreasureChest extends Item {
   public void onCollide(Player p) {
     p.score += points;
     isVisible = false;
+    soundCoin.play();
+    p.setHappyAnimation();
   }
 
 }

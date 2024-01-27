@@ -16,6 +16,8 @@ import processing.sound.SoundFile; // import notwendig für Sounds
 
 // Spielerposition und Groesse
 
+// maximilian.geitner@outlook.de
+
 Item[] items = new Item[10];
 
 Random r = new Random();
@@ -24,7 +26,7 @@ PImage iconHeart;
 Player player1;
 GameState gameState = GameState.Running;
 GameOverMenu gameOverMenu = new GameOverMenu();
-SoundFile soundCoin;
+SoundFile soundCoin, soundIce, soundMetal;
 
 // Wahrscheinlichkeiten fuer Punktzahl 0 bis 50
 // Muenze, Bombe, Medikit, gr. Bombe, Container
@@ -64,8 +66,12 @@ void initSounds() {
   soundCoin = new SoundFile(this, baseDir + "coin.wav");
   soundCoin.amp(0.5); // amplify: Lautstaerke von 0.0 bis 1.0
   soundCoin.rate(1.0); // Abspielgeschwindigkeit: 1.0
-  soundCoin.cue(0.1); // Position in der Sounddatei in Sekunden, "Vorspulen"
-  
+  soundCoin.cue(0.3); // Position in der Sounddatei in Sekunden, "Vorspulen"
+  soundIce = new SoundFile(this, baseDir + "ice.wav");
+  soundIce.amp(0.5);
+  soundMetal = new SoundFile(this, baseDir + "metal_hit.wav");
+  soundMetal.amp(0.5);
+  soundMetal.cue(0.2);
 }
 
 // gebe auf der Konsole Wahrscheinlichkeiten fuer Items aus
@@ -111,7 +117,7 @@ void spawnItem() {
     // items[freeIndex] = new IceBlock(x, y, speed, true);
     // 2.) Waehle Wahrscheinlichkeitsverteilung (Punktzahl abhaengig)
     int[] probs = prob50;
-    probs = probTest;
+    //probs = probTest;
     // 3.) Waehle zufaelligen Index
     int randomNumber = r.nextInt(100); // 0 bis 99
     int sumProbs = 0;

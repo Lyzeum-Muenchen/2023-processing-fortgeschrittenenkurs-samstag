@@ -9,10 +9,10 @@ public static class Util {
     if (f.exists()) {
       try {
         BufferedReader reader = new BufferedReader(
-          new FileReader(f));
-        String content = reader.readLine();
-        reader.close();
-        highscore = Integer.parseInt(content);
+          new FileReader(f)); // oeffne Datei im Lesemodus
+        String content = reader.readLine(); // Lese erste Zeile ein
+        reader.close(); // Schliesse Datei
+        highscore = Integer.parseInt(content); // Text in Zahl umwandeln
       }catch (IOException ex) {
       }catch (NumberFormatException e) {
       }

@@ -41,7 +41,8 @@ public class Container extends Item {
   
   public void onCollide(Player p) {
     p.lives -= 2;
-    // TODO GameOver
+    soundMetal.play();
+    p.setPainAnimation(30);
     isVisible = false;
   }
 }
