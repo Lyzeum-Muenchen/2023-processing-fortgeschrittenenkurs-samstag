@@ -9,7 +9,7 @@ public class Player {
   int effectDur; // effectDuration, 
   PImage iconFreeze;
   PImage playerDefault, playerHappy, playerPain;
-  boolean faceRight;
+  boolean faceRight; // schaut der Spieler nach rechts?
   int animState; // animationState, 0: Default, 1: Happy, 2: Pain
   int animDur; // animationDuration
   
@@ -20,6 +20,7 @@ public class Player {
     h = 80;
     lives = 1;
     score = 0;
+    faceRight = true;
     iconFreeze = loadImage("icons//max-icons//freeze7.png");
     playerDefault = loadImage("icons//max-icons//PlayerPig.png");
     playerHappy = loadImage("icons//max-icons//PlayerPigMONEY.png");
@@ -87,7 +88,18 @@ public class Player {
     }else if(animState == 2) {
       selImg = playerPain;
     }
-    image(selImg, x, y, w, h);
+    //image(selImg, x, y, w, h);
+    if (!faceRight) {
+      // gedrehtes Bild
+      pushMatrix(); // speichere Matrixzustand
+      translate(x + w, y);
+      scale(-1,1); // You had it right!
+      image(selImg,0, 0, w, h);
+      popMatrix(); // Stelle frueheren Zusatnd wieder her
+    }else {
+      image(selImg, x, y, w, h);
+    }
+    
     
     if (isFreezing) {
       image(iconFreeze, x - 10, y - 10, w + 20, h + 20);
@@ -98,9 +110,11 @@ public class Player {
     // 39: rechte Pfeiltaste
     if (keyCode == 37) {
       leftPressed = true;
+      faceRight = false;
     }
     if (keyCode == 39) {
       rightPressed = true;
+      faceRight = true;
     }
   }
   public void keyReleased() {

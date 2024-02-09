@@ -39,7 +39,12 @@ SoundFile soundCoin, soundIce, soundMetal;
 // - Zufallsbox
 // --> Quadratisch (128 x 128 Pixel)
 // --> Rechteckig (256 x 128 Pixel)
-int[] prob50 = new int[]{50, 15, 13, 0, 0, 10, 10, 0, 0, 2};
+int[] prob25 = new int[]{50, 15, 13, 10, 0, 0, 0, 10, 2, 0};
+int[] prob50 = new int[]{35, 13, 8, 10, 2, 10, 10, 10, 2, 0};
+int[] prob75 = new int[]{35, 10, 5, 12, 5, 10, 10, 8, 5, 0};
+int[] prob100 = new int[]{20, 5, 5, 15, 10, 10, 10, 15, 10, 0};
+int[] probExtreme = new int[]{2, 7, 3, 15, 20, 15, 15, 15, 8, 0};
+
 int[] probTest = new int[]{0, 0, 0, 0, 50, 0, 0, 0, 50, 0};
 String[] labels = new String[]{"Coin", "Bomb", "MediKit",
   "Large Bomb", "Container", "Iceblock", "Fireball", 
@@ -56,8 +61,11 @@ void setup() {
   highscorePath = dataPath("highscore.txt"); // Datei im Projekt
   highscore = Util.loadHighscore(highscorePath);
   initGame();
+  showProbabilities(prob25);
   showProbabilities(prob50);
-  showProbabilities(probTest);
+  showProbabilities(prob75);
+  showProbabilities(prob100);
+  showProbabilities(probExtreme);
   initSounds();
 } // ENDE setup()
 
@@ -113,10 +121,20 @@ void spawnItem() {
   int freeIndex = getFreeIndex();
   // Falls Item erstellt werden kann
   if (freeIndex != -1) {
-    
     // items[freeIndex] = new IceBlock(x, y, speed, true);
     // 2.) Waehle Wahrscheinlichkeitsverteilung (Punktzahl abhaengig)
-    int[] probs = prob50;
+    int[] probs = prob25;
+    if (player1.score <= 25) {
+      probs = prob25;
+    }else if (player1.score <= 50) {
+      probs = prob50;
+    }else if (player1.score <= 75) {
+      probs = prob75;
+    }else if (player1.score <= 100) {
+      probs = prob100;
+    }else{
+      probs = probExtreme;
+    }
     //probs = probTest;
     // 3.) Waehle zufaelligen Index
     int randomNumber = r.nextInt(100); // 0 bis 99
