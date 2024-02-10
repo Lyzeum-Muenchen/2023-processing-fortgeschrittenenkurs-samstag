@@ -14,5 +14,6 @@ public class Bomb extends Item {
     p.lives--;
     p.setPainAnimation(30);
     isVisible = false;
+    soundBomb.play();
   }
 }

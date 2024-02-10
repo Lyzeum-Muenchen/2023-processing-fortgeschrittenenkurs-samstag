@@ -26,7 +26,7 @@ PImage iconHeart;
 Player player1;
 GameState gameState = GameState.Running;
 GameOverMenu gameOverMenu = new GameOverMenu();
-SoundFile soundCoin, soundIce, soundMetal;
+SoundFile soundCoin, soundIce, soundMetal, soundBomb;
 
 // Wahrscheinlichkeiten fuer Punktzahl 0 bis 50
 // Muenze, Bombe, Medikit, gr. Bombe, Container
@@ -80,6 +80,9 @@ void initSounds() {
   soundMetal = new SoundFile(this, baseDir + "metal_hit.wav");
   soundMetal.amp(0.5);
   soundMetal.cue(0.2);
+  soundBomb = new SoundFile(this, baseDir + "explosion2.wav");
+  soundBomb.amp(0.5);
+  //soundBomb.cue(0.5);
 }
 
 // gebe auf der Konsole Wahrscheinlichkeiten fuer Items aus
