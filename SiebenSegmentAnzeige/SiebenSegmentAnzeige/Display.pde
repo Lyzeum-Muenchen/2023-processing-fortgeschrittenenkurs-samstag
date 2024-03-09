@@ -16,9 +16,11 @@
   */
 public class Display {
   boolean[] segmentEnabled;
-  
-  public Display() {
+  private int startX, startY;
+  public Display(int x, int y) {
     segmentEnabled = new boolean[7];
+    startX = x;
+    startY = y;
   }
   
   public void setNumber(int number) {
@@ -36,20 +38,37 @@ public class Display {
         break;
       case 2:
         // 0, 2, 3, 4, 6
-        segmentEnabled[0] = true;
-        segmentEnabled[2] = true;
-        segmentEnabled[3] = true;
-        segmentEnabled[4] = true;
-        segmentEnabled[6] = true;
+        setSegments(new int[]{0, 2, 3, 4, 6});
         break;
       case 3:
         //0, 2, 3, 5, 6
-        segmentEnabled[0] = true;
-        segmentEnabled[2] = true;
-        segmentEnabled[3] = true;
-        segmentEnabled[5] = true;
-        segmentEnabled[6] = true;
+        setSegments(new int[]{0, 2, 3, 5, 6});
         break;
+      case 4:
+        // 1, 2, 3, 5
+        setSegments(new int[]{1, 2, 3, 5});
+        break;
+      case 5:
+        // 0, 1, 3, 5, 6
+        int[] arr5 = new int[]{0, 1, 3, 5, 6};
+        setSegments(arr5);
+        break;
+      case 6:
+        setSegments(new int[]{0, 1, 3, 4, 5, 6});
+        break;
+      case 7:
+        setSegments(new int[]{0, 2, 5});
+        break;
+      case 8:
+        setSegments(new int[]{0, 1, 2, 3, 4, 5, 6});
+        break;
+      case 9:
+        setSegments(new int[]{0, 1, 2, 3, 5, 6});
+    }
+  }
+  public void setSegments(int[] ids) {
+    for (int i = 0; i <ids.length; i++) {
+      segmentEnabled[ids[i]] = true; // aktiviere Segment mit Zahl im Array
     }
   }
   
