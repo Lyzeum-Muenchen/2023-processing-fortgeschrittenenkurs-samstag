@@ -39,5 +39,17 @@ void draw() {
   for (int i = 0; i < disp.length; i++){
     disp[i].draw(); // 4.) Zeichnen-Methode aufrufen
   }
-  
+  // rote Punkte einfuegen
+  fill(255, 0, 0);
+  //stroke(50, 100, 150); // Randfarbe
+  //noStroke(); // Kein Rand
+  //strokeWeight(2); // Randdicke
+  int yDot1 = startY - se + le;
+  int yDot2 = startY + 3 * se + le;
+  // Punkte zwischen Stunde und Minute
+  rect(startX + le * 3 + se * 2 + se / 2, yDot1, se, se);
+  rect(startX + le * 3 + se * 2 + se / 2, yDot2, se, se);
+  // Punkte zwischen Minute und Sekunde
+  rect(startX + le * 7 + se * 2 + se / 2, yDot1, se, se);
+  rect(startX + le * 7 + se * 2 + se / 2, yDot2, se, se);
 }
