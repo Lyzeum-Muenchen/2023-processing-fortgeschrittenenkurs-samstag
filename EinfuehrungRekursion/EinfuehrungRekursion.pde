@@ -3,7 +3,7 @@ ArrayList<Integer> list = new ArrayList<Integer>(); // Konstruktor
 // Datentyp von Elementen in der Liste
 void setup() {
   int fib4 = fibonacciLoop(4);
-  println(fib4); // Ergebnis = 
+  println(fib4); // Ergebnis = 5
 }
 
 public void listDemo() {
@@ -16,8 +16,11 @@ public void listDemo() {
 // - Funktion ruft sich selber auf
 // Problem: Endlossschleife
 int fibonacciLoop(int n) {
-  int x;
-  int[] array = new int[10]; // Länge des Arrays angeben
-  
-  
+  int[] array = new int[Math.max(n + 1, 2)]; // Länge des Arrays angeben
+  array[0] = 1;
+  array[1] = 1;
+  for (int i = 2; i <= n; i++) {
+    array[i] = array[i - 1] + array[i - 2];
+  }
+  return array[n];
 }
