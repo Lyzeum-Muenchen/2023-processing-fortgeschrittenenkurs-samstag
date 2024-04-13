@@ -2,12 +2,15 @@
 ArrayList<Integer> list = new ArrayList<Integer>(); // Konstruktor
 // Datentyp von Elementen in der Liste
 void setup() {
+  long start = millis(); // Funktion, welche einen Zeitstempel zurückgibt
   // Test Fib Loop
-  for (int i = 0; i <= 20; i++) {
+  for (int i = 0; i <= 35; i++) {
     // Verknüpfung Text, Variable
     // <Text> + <Variable> + <Text>
-    println("Fib(" + i + ") = " + fibonacciLoop(i)); 
+    println("Fib(" + i + ") = " + fibonacciRec(i)); 
   }
+  long end = millis();
+  println("Duration: " + (end - start) + "ms");
 }
 
 public void listDemo() {
@@ -19,8 +22,8 @@ public void listDemo() {
 // Konzept von rekursiven Funktionen:
 // - Funktion ruft sich selber auf
 // Problem: Endlossschleife
-int fibonacciLoop(int n) {
-  int[] array = new int[Math.max(n + 1, 2)]; // Länge des Arrays angeben
+long fibonacciLoop(int n) {
+  long[] array = new long[Math.max(n + 1, 2)]; // Länge des Arrays angeben
   array[0] = 1;
   array[1] = 1;
   for (int i = 2; i <= n; i++) 
@@ -30,7 +33,7 @@ int fibonacciLoop(int n) {
 }
 // Abbruchbedingung: Verhindert Endlosschleife
 // 
-int fibonacciRec(int n) {
+long fibonacciRec(int n) {
   if (n == 0 || n == 1) {
     return 1;
   }else{
