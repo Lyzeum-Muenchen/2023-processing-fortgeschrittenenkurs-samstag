@@ -17,3 +17,8 @@ Ressourcen:
 
 - Implementation der Eisblock-Klasse:
     - Spieler verlangsamt seine Geschwindigkeit um 30% für 15 Sekunden
+
+## Hausaufgabe vom 13.04.24
+
+- Minesweeper Regeln verstehen
+- Textur für Flagge zeichnen (Größe: 128 * 128, Format: png mit transparenten Hintergrund)

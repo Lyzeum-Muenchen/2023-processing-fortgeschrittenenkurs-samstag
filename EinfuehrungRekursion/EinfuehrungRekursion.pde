@@ -1,13 +1,14 @@
 
 ArrayList<Integer> list = new ArrayList<Integer>(); // Konstruktor
+ArrayList<Long> listFib = new ArrayList<Long>();
 // Datentyp von Elementen in der Liste
 void setup() {
   long start = millis(); // Funktion, welche einen Zeitstempel zurückgibt
   // Test Fib Loop
-  for (int i = 0; i <= 35; i++) {
+  for (int i = 0; i <= 91; i++) {
     // Verknüpfung Text, Variable
     // <Text> + <Variable> + <Text>
-    println("Fib(" + i + ") = " + fibonacciRec(i)); 
+    println("Fib(" + i + ") = " + fibList(i)); 
   }
   long end = millis();
   println("Duration: " + (end - start) + "ms");
@@ -40,5 +41,22 @@ long fibonacciRec(int n) {
     // Rekursiver Aufruf: - Rufe gleiche Funktion nochmal auf
     //                    - Neuer Aufruf löst "leichteres/kleineres" Problem
     return fibonacciRec(n - 1) + fibonacciRec(n - 2);
+  }
+}
+
+long fibList(int n) {
+  if (listFib.size() > n) {
+    // Ergebnis wurde bereits berechnet
+    return listFib.get(n);
+  }else {
+    // berechne Wert
+    long value = 1;
+    if (n >= 2) {
+      value = fibList(n - 1) + fibList(n - 2); 
+    }
+    if (listFib.size() == n) {
+      listFib.add(value);
+    }
+    return value;
   }
 }
