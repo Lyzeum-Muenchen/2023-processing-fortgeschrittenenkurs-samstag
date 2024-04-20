@@ -21,4 +21,7 @@ Ressourcen:
 ## Hausaufgabe vom 13.04.24
 
 - Minesweeper Regeln verstehen
-- Textur für Flagge zeichnen (Größe: 128 * 128, Format: png mit transparenten Hintergrund)
+- Textur für Flagge zeichnen (Größe: 128 * 128 Pixel, Format: png mit transparenten Hintergrund)
+
+## Hausaufgabe vom 20.04.24
+- Kachel in einer anderen Farbe (z.B. Weiß) zeichnen, falls Mauszeiger innerhalb der Kachel liegt
