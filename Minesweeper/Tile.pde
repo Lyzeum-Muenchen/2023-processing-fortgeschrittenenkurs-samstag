@@ -21,12 +21,25 @@ public class Tile {
     this.y = y;
     
   }
+  // Liegt Mauszeiger innerhalb der Kachel?
+  public boolean isInBounds() {
+    return mouseX >= x && mouseX <= x+ tileLength
+      && mouseY >= y && mouseY <= y + tileLength;
+  }
   
   public void draw() {
     // zugedecktes Feld
     stroke(0);
-    fill(50); 
-    
+    if (isInBounds()) {
+      fill(220); // weiss
+    }else if(isVisible) {
+      fill(150); // schwarz/dunkelgrau
+    }else {
+      fill(50);
+    }
+    if (isMine) {
+      fill(200, 0, 0);
+    }
     //mouseX;
     //mouseY;
     rect(x, y, tileLength, tileLength);

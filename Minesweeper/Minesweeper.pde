@@ -1,4 +1,4 @@
-
+import java.util.Random;
 /*
 - Array an Kacheln
   - Mine oder Leer
@@ -41,6 +41,43 @@ void initGame() {
   }
 }
 
+void generateMines(int x, int y) {
+  float probMine = 0.1; // zwischen 0 und 1
+  Random random = new Random();
+  // Nur Minen generieren
+  for (int i = 0; i < tiles.length; i++) {
+    for(int j = 0; j < tiles[0].length; j++) {
+      // Ereignis Mine generieren tritt ein
+      // Falls auf oder neben gewählter erster Kachel, dann keine Mine generieren
+      boolean isMine = random.nextFloat() < probMine;
+      tiles[i][j].isMine = isMine;
+    }
+  }
+  // Minen im Spawnbereich entfernen
+  for (int i = x - 1; i <= x + 1; i++) {
+    for (int j = y - 1; j <= y + 1; j++) {
+      if (i >= 0 && i < tiles.length && j >= 0 && j < tiles[0].length)
+        tiles[i][j].isMine = false;
+    }
+  }
+}
+void clickTile(int x, int y) {
+
+}
+
+void mousePressed() {
+  // finde Kachel, die gedrückt wurde
+  for (int i = 0; i < tiles.length; i++) {
+    for (int j = 0; j < tiles[0].length; j++) {
+      if (tiles[i][j].isInBounds()) {
+        // Kachel deckt Feld auf
+        // Spezialfall: Erste Kachel wird aufgedeckt -> Generiere Minen
+        generateMines(i, j);
+      }
+    }
+  }
+}
+
 
 void draw() {
 
@@ -51,8 +88,8 @@ void draw() {
     }
   }
   
-  smooth(4);
-  fill(0, 100, 255, 100); // RGB + Alpha, halbtransparent
-  circle(mouseX, mouseY, 40);
+  //smooth(4);
+  //fill(0, 100, 255, 100); // RGB + Alpha, halbtransparent
+  //circle(mouseX, mouseY, 40);
   
 }
