@@ -25,9 +25,13 @@ int tileLength = 40;
 int tilesX = 32; // 1280 / 40
 int tilesY = 16;
 Tile[][] tiles;  // Array mit Kacheln
+PImage imgMine; // Bild der Mine
+
 void setup() {
   size(1280, 720);
+  imgMine = loadImage("Mine.png");
   initGame();
+  
 }
 
 void initGame() {
@@ -42,7 +46,7 @@ void initGame() {
 }
 
 void generateMines(int x, int y) {
-  float probMine = 0.1; // zwischen 0 und 1
+  float probMine = 0.15; // zwischen 0 und 1
   Random random = new Random();
   // Nur Minen generieren
   for (int i = 0; i < tiles.length; i++) {
@@ -60,7 +64,34 @@ void generateMines(int x, int y) {
         tiles[i][j].isMine = false;
     }
   }
+  // Methode zur Bestimmung der Minennachbarn
+  computeMineCount();
 }
+
+void computeMineCount() {
+  // Zähle Nachbarn für jede Kachel
+  // Schleife über all Kachel: Rufe Hilfsmethode auf
+  for (int i = 0; i < tiles.length; i++) {
+    for (int j = 0; j < tiles[0].length; j++) {
+      tiles[i][j].mineCount = getMineCount(i, j);
+    }
+  }
+}
+// Hilfsmethode für eine Kachel, zähle Minen benachbart zur gewählten Kachel
+int getMineCount(int x, int y) {
+  int count = 0;
+  for (int i = x - 1; i <= x + 1; i++) {
+    for (int j = y - 1; j <= y + 1; j++) {
+      if (i >= 0 && i < tiles.length && j >= 0 && j < tiles[0].length
+        && tiles[i][j].isMine) {
+        count++;
+      }
+    }
+  }
+  return count;
+}
+
+
 void clickTile(int x, int y) {
 
 }

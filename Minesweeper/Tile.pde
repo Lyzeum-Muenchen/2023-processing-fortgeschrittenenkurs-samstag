@@ -37,12 +37,18 @@ public class Tile {
     }else {
       fill(50);
     }
-    if (isMine) {
-      fill(200, 0, 0);
-    }
     //mouseX;
     //mouseY;
     rect(x, y, tileLength, tileLength);
+    // TODO: Zeichen Mine, falls es eine Mine ist und aufgedeckt ist 
+    if (isMine) {
+      image(imgMine, x, y, tileLength, tileLength);
+    }else {
+      fill(0);
+      textAlign(CENTER);
+      textSize(20);
+      text(mineCount + "", x + tileLength/2, y + tileLength/2);
+    }
   }
 
 }
