@@ -40,14 +40,22 @@ public class Tile {
     //mouseX;
     //mouseY;
     rect(x, y, tileLength, tileLength);
-    // TODO: Zeichen Mine, falls es eine Mine ist und aufgedeckt ist 
-    if (isMine) {
-      image(imgMine, x, y, tileLength, tileLength);
-    }else {
-      fill(0);
-      textAlign(CENTER);
-      textSize(20);
-      text(mineCount + "", x + tileLength/2, y + tileLength/2);
+    // Falls aufgedeckt, Mine bzw. Zahl zeichnen
+    if (isVisible) {
+      if (isMine) {
+        image(imgMine, x, y, tileLength, tileLength);
+      }else if (mineCount != 0) {
+        fill(255);
+        textAlign(CENTER);
+        textSize(20);
+        text(mineCount + "", x + tileLength/2, y + tileLength/2);
+      }
+    }else if(hasFlag){
+      // Hier Bild einfügen
+      fill(0, 0, 255);
+      rect(x, y, tileLength, tileLength);
+      
+      //image(imgFlag, x, y, tileLength, tileLength);
     }
   }
 
