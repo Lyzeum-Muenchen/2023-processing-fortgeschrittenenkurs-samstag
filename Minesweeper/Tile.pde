@@ -52,10 +52,10 @@ public class Tile {
       }
     }else if(hasFlag){
       // Hier Bild einfügen
-      fill(0, 0, 255);
-      rect(x, y, tileLength, tileLength);
+      //fill(0, 0, 255);
+      //rect(x, y, tileLength, tileLength);
       
-      //image(imgFlag, x, y, tileLength, tileLength);
+      image(imgFlag, x, y, tileLength, tileLength);
     }
   }
 

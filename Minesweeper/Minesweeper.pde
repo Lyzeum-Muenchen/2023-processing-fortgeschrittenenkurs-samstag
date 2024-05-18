@@ -24,26 +24,27 @@ import java.util.Random;
 
 /*
 Aufgaben:
-- Flaggen Funktion
 - Zeit vergangen
 - Game Over (Mine getroffen ODER Alle Minen mit Flagge markieren)
 Optionale Aufgaben:
 - Schwierigkeitsgrad
-- Eigenen Timer verwenden
-- Timelimit
-- Highscoreliste
 */
 
 int tileLength = 40;
 int tilesX = 32; // 1280 / 40
 int tilesY = 16;
+
+long timestamp; // Zeitstempel für Spielbeginn
+
+int availableFlags = 0; // Entspricht Gesamtzahl der Minen am Anfang des Spiels
 Tile[][] tiles;  // Array mit Kacheln
-PImage imgMine; // Bild der Mine
+PImage imgMine, imgFlag; // Bild der Mine
 GameState state;
 
 void setup() {
   size(1280, 720);
   imgMine = loadImage("Mine.png");
+  imgFlag = loadImage("Flag.png");
   initGame();
   
 }
@@ -61,8 +62,9 @@ void initGame() {
 }
 
 void generateMines(int x, int y) {
-  float probMine = 0.15; // zwischen 0 und 1
+  float probMine = 0.05; // zwischen 0 und 1
   Random random = new Random();
+  availableFlags = 0;
   // Nur Minen generieren
   for (int i = 0; i < tiles.length; i++) {
     for(int j = 0; j < tiles[0].length; j++) {
@@ -70,17 +72,21 @@ void generateMines(int x, int y) {
       // Falls auf oder neben gewählter erster Kachel, dann keine Mine generieren
       boolean isMine = random.nextFloat() < probMine;
       tiles[i][j].isMine = isMine;
+      availableFlags += isMine ? 1 : 0; // Ternärer Operator
     }
   }
   // Minen im Spawnbereich entfernen
   for (int i = x - 1; i <= x + 1; i++) {
     for (int j = y - 1; j <= y + 1; j++) {
-      if (isValidTile(i, j))
+      if (isValidTile(i, j)) {
+        availableFlags -= tiles[i][j].isMine ? 1 : 0; // Mine entfernen -> Flaggenzahl reduzieren
         tiles[i][j].isMine = false;
+      }
     }
   }
   // Methode zur Bestimmung der Minennachbarn
   computeMineCount();
+  timestamp = millis();
 }
 
 void computeMineCount() {
@@ -109,6 +115,8 @@ boolean isValidTile(int x, int y) {
   return x >= 0 && x < tiles.length && y >= 0 && y < tiles[0].length;
 }
 
+
+
 void clickTile(int x, int y) {
   if (isValidTile(x, y) && !tiles[x][y].isVisible) {
     if (mouseButton == LEFT) {
@@ -127,9 +135,32 @@ void clickTile(int x, int y) {
       }
     }else if (mouseButton == RIGHT) {
       // Zustand invertieren
-      tiles[x][y].hasFlag = !tiles[x][y].hasFlag;
+      // Keine Flagge auf dem Feld UND Flagge verfügbar -> Flagge setzen
+      if (!tiles[x][y].hasFlag && availableFlags > 0) {
+        tiles[x][y].hasFlag = !tiles[x][y].hasFlag;
+        availableFlags--;
+        if (isGameWon()) 
+          state = GameState.GAME_WON;
+      }else if(tiles[x][y].hasFlag) {
+        // Flagge entfernen
+        tiles[x][y].hasFlag = false;
+        availableFlags++;
+      }
     }
   }
+}
+
+boolean isGameWon() {
+  if (availableFlags == 0) {
+    for (int i = 0; i < tiles.length; i++) {
+      for (int j = 0; j < tiles[0].length; j++) {
+        if (tiles[i][j].hasFlag && !tiles[i][j].isMine)
+            return false;
+      }
+    }
+    return true; // Alle Felder mit Flagge liegen auf Minen
+  }
+  return false;
 }
 
 void mousePressed() {
@@ -156,10 +187,24 @@ void mousePressed() {
 void draw() {
 
   background(220);
+  if (state == GameState.GAME_WON) {
+    background(0, 255, 0); // Grüner Hintergrund, falls Spiel erfolgreich beendet wurde
+  }else if(state == GameState.GAME_LOST) {
+    background(255, 0, 0);
+  }
   for (int i = 0; i < tiles.length; i++) {
     for (int j = 0; j < tiles[0].length; j++) {
       tiles[i][j].draw();
     }
+  }
+  // Texteinblendungen
+  // Einblendung verfügbarer Flaggen
+  if (state != GameState.NOT_STARTED) {
+    image(imgFlag, 140, 10, 50, 50);
+    fill(255);
+    textSize(40);
+    text(availableFlags, 100, 50);
+    text(((millis() - timestamp)/1000) + "", width/2, 50); // Vergangene Zeit in Sekunden
   }
   
   //fill(0, 100, 255, 100); // RGB + Alpha, halbtransparent
