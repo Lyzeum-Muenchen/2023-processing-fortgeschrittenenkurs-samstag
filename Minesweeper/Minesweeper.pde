@@ -20,6 +20,10 @@ import java.util.Random;
   - Spielfeldgröße:
   - Anzahl Minen
 - Stoppuhr
+
+Bugs:
+- Zeit läuft weiter, falls Spiel vorbei
+- 
 */
 
 /*
@@ -28,13 +32,17 @@ Aufgaben:
 - Game Over (Mine getroffen ODER Alle Minen mit Flagge markieren)
 Optionale Aufgaben:
 - Schwierigkeitsgrad
+  - Leicht: 10 x 10: 0.15625
+  - Mittel: 16 x 16: 0.15625
+  - Schwierig: 32x16: 0.20625
 */
-
+final int OFFSET_Y = 80;
 int tileLength = 40;
 int tilesX = 32; // 1280 / 40
 int tilesY = 16;
 
 long timestamp; // Zeitstempel für Spielbeginn
+long timestampEnd;
 
 int availableFlags = 0; // Entspricht Gesamtzahl der Minen am Anfang des Spiels
 Tile[][] tiles;  // Array mit Kacheln
@@ -55,7 +63,7 @@ void initGame() {
   for (int i = 0; i < tiles.length; i++) {
     for (int j = 0; j < tiles[0].length; j++) {
       // x- und y-Position
-      tiles[i][j] = new Tile(i * tileLength, 80 + j * tileLength);
+      tiles[i][j] = new Tile(i * tileLength, OFFSET_Y + j * tileLength);
     }
   }
   state = GameState.NOT_STARTED;
@@ -124,6 +132,7 @@ void clickTile(int x, int y) {
       tiles[x][y].isVisible = true;
       tiles[x][y].hasFlag = false;
       if (tiles[x][y].isMine) {
+        timestampEnd = millis();
         state = GameState.GAME_LOST;
       }else if(tiles[x][y].mineCount == 0) {
         // falls 0 Minen in der Umgebung, dann Nachbarfelder aufdecken
@@ -139,8 +148,10 @@ void clickTile(int x, int y) {
       if (!tiles[x][y].hasFlag && availableFlags > 0) {
         tiles[x][y].hasFlag = !tiles[x][y].hasFlag;
         availableFlags--;
-        if (isGameWon()) 
+        if (isGameWon()) {
+          timestampEnd = millis();
           state = GameState.GAME_WON;
+        }
       }else if(tiles[x][y].hasFlag) {
         // Flagge entfernen
         tiles[x][y].hasFlag = false;
@@ -164,6 +175,11 @@ boolean isGameWon() {
 }
 
 void mousePressed() {
+  if (state == GameState.GAME_WON || state == GameState.GAME_LOST) {
+    if (mouseY < OFFSET_Y) {
+      state = GameState.SETUP;
+    }
+  }
   // finde Kachel, die gedrückt wurde
   for (int i = 0; i < tiles.length; i++) {
     for (int j = 0; j < tiles[0].length; j++) {
@@ -201,13 +217,21 @@ void draw() {
   // Einblendung verfügbarer Flaggen
   if (state != GameState.NOT_STARTED) {
     image(imgFlag, 140, 10, 50, 50);
-    fill(255);
-    textSize(40);
-    text(availableFlags, 100, 50);
-    text(((millis() - timestamp)/1000) + "", width/2, 50); // Vergangene Zeit in Sekunden
+    
   }
+  if (state == GameState.RUNNING) {
+    drawTimePassed((millis() - timestamp)/1000);
+  }else if (state == GameState.GAME_WON || state == GameState.GAME_LOST) {
+    drawTimePassed((timestampEnd - timestamp) / 1000);
+  }
+  
   
   //fill(0, 100, 255, 100); // RGB + Alpha, halbtransparent
   //circle(mouseX, mouseY, 40);
-  
+}
+void drawTimePassed(long value) {
+  fill(255);
+  textSize(40);
+  text(availableFlags, 100, 50);
+  text(value + "", width/2, 50); // Vergangene Zeit in Sekunden
 }
