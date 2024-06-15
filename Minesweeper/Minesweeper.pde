@@ -38,8 +38,7 @@ Optionale Aufgaben:
 */
 final int OFFSET_Y = 80;
 int tileLength = 40;
-int tilesX = 32; // 1280 / 40
-int tilesY = 16;
+float probMine;
 
 long timestamp; // Zeitstempel für Spielbeginn
 long timestampEnd;
@@ -48,29 +47,41 @@ int availableFlags = 0; // Entspricht Gesamtzahl der Minen am Anfang des Spiels
 Tile[][] tiles;  // Array mit Kacheln
 PImage imgMine, imgFlag; // Bild der Mine
 GameState state;
+Button[] buttons;
 
 void setup() {
   size(1280, 720);
   imgMine = loadImage("Mine.png");
   imgFlag = loadImage("Flag.png");
-  initGame();
   
+  state = GameState.SETUP;
+  // Buttons für Schwierigkeitsgrad erstellen
+  buttons = new Button[4];
+  buttons[0] = new Button("Einfach");
+  buttons[1] = new Button("Mittel");
+  buttons[2] = new Button("Schwer");
+  buttons[3] = new Button("Nochmal Spielen");
+  for (int i = 0; i < 3; i++)  {
+    buttons[i].setBounds(i * 200 + (i + 1) * 170, height/2 - 40, 200, 80);
+  }
+  buttons[3].setBounds(width - 250, 0, 200, 80);
 }
 
-void initGame() {
+void initGame(int tilesX, int tilesY, float probMine) {
+  this.probMine = probMine;
   // Initialisiere Array
   tiles = new Tile[tilesX][tilesY];
+  int offsetX = width/2 - (tilesX * tileLength)/2;
   for (int i = 0; i < tiles.length; i++) {
     for (int j = 0; j < tiles[0].length; j++) {
       // x- und y-Position
-      tiles[i][j] = new Tile(i * tileLength, OFFSET_Y + j * tileLength);
+      tiles[i][j] = new Tile(offsetX + i * tileLength, OFFSET_Y + j * tileLength);
     }
   }
   state = GameState.NOT_STARTED;
 }
 
 void generateMines(int x, int y) {
-  float probMine = 0.05; // zwischen 0 und 1
   Random random = new Random();
   availableFlags = 0;
   // Nur Minen generieren
@@ -176,9 +187,12 @@ boolean isGameWon() {
 
 void mousePressed() {
   if (state == GameState.GAME_WON || state == GameState.GAME_LOST) {
-    if (mouseY < OFFSET_Y) {
-      state = GameState.SETUP;
+    buttons[3].mousePressed();
+  }else if(state == GameState.SETUP) {
+    for (int i = 0; i < 3; i++) {
+      buttons[i].mousePressed();
     }
+    return;
   }
   // finde Kachel, die gedrückt wurde
   for (int i = 0; i < tiles.length; i++) {
@@ -199,10 +213,37 @@ void mousePressed() {
   }
 }
 
+void mouseReleased() {
+  for (int i = 0; i < 4; i++) {
+    buttons[i].mouseReleased();
+  }
+}
+
+void onButtonClicked(String label) {
+  switch(label) {
+    case "Einfach":
+      initGame(10, 10, 0.15);
+      break;
+    case "Mittel":
+      initGame(16, 16, 0.15);
+      break;
+    case "Schwer":
+      initGame(32, 16, 0.20);
+      break;
+    case "Nochmal Spielen":
+      state = GameState.SETUP;
+  }
+}
 
 void draw() {
 
   background(220);
+  if (state == GameState.SETUP) {
+    for (int i = 0; i < 3; i++) {
+      buttons[i].draw();
+    }
+    return; // Verlasse Funktion sofort
+  }
   if (state == GameState.GAME_WON) {
     background(0, 255, 0); // Grüner Hintergrund, falls Spiel erfolgreich beendet wurde
   }else if(state == GameState.GAME_LOST) {
@@ -223,6 +264,7 @@ void draw() {
     drawTimePassed((millis() - timestamp)/1000);
   }else if (state == GameState.GAME_WON || state == GameState.GAME_LOST) {
     drawTimePassed((timestampEnd - timestamp) / 1000);
+    buttons[3].draw();
   }
   
   

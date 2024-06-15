@@ -55,7 +55,7 @@ public class Button{
   }
   public void mouseReleased(){
     if(isInBounds() && pressed){
-      System.out.println(text);
+      onButtonClicked(text);
     }
     pressed = false;
   }
