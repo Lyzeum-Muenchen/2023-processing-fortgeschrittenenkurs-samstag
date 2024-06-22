@@ -5,7 +5,8 @@ int value;
 
 void setup() {
   size(500, 500);
-  myClient = new Client(this, "127.0.0.1", 2024);
+  String ipAdress = "192.168.178.154";
+  myClient = new Client(this, ipAdress, 2024);
 }
 
 void draw() {
