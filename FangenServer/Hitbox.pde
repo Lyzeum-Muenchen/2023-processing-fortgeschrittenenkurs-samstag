@@ -7,4 +7,8 @@ public class Hitbox {
     this.w = w;
     this.h = h;
   }
+  
+  public Hitbox move(int moveX, int moveY) {
+    return new Hitbox(x + moveX, y + moveY, w, h);
+  }
 }
