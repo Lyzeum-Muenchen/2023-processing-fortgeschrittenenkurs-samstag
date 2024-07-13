@@ -5,6 +5,7 @@ private int TILE_LENGTH = 64;
 Player player = new Player(0, 0, TILE_LENGTH, TILE_LENGTH);
 
 void setup() {
+  frameRate(120);
   myServer = new Server(this, 2024);
 }
 

@@ -18,7 +18,7 @@ public class Player {
   }
   public void simulateStep() {
     // Bewegung des Spielers
-    int speed = 10;
+    int speed = 5;
     int moveX = 0;
     int moveY = 0;
     if (keysPressed[0])

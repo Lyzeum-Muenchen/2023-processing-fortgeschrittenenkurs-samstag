@@ -1,23 +1,57 @@
 import processing.net.*;
 
 Client myClient;
-boolean[] keyPressed;
-int[] codes = new int[]{38, 39, 40, 37};
+boolean[] keysPressed;
+final int[] codes = new int[]{38, 39, 40, 37};
+final int[] codesAlternative = new int[]{87, 68, 83, 65};
+Player player;
 
 void setup() {
   size(1280, 720);
+  frameRate(120);
   // Client initialisieren
   myClient = new Client(this, "127.0.0.1", 2024);
-  keyPressed = new boolean[4]; // Up, Right, Down, Left
+  keysPressed = new boolean[4]; // Up, Right, Down, Left
+  player = new Player(0, 0, 64, 64);
 }
 void keyPressed() {
   println(keyCode);
+  for (int i = 0; i < 4; i++) {
+    if (keyCode == codes[i]) {
+      keysPressed[i] = true;
+    }
+  }
 }
 void keyReleased() {
+  for (int i = 0; i < 4; i++) {
+    if (keyCode == codes[i]) {
+      keysPressed[i] = false;
+    }
+  }
+}
 
+void sendKeysPressed() {
+  JSONObject msgObj = new JSONObject();
+  // { "type": "actions",
+  //   "actions": [...] }
+  msgObj.setString("type", "actions");
+  JSONArray arr = new JSONArray();
+  for (int i = 0; i < keysPressed.length; i++) {
+    arr.setBoolean(i, keysPressed[i]);
+  }
+  msgObj.setJSONArray("actions", arr);
+  myClient.write(msgObj.toString());
 }
 
 void draw() {
+  sendKeysPressed();
   // Nachrichten verarbeiten
+  while (myClient.active() && myClient.available() > 0) {
+    String msg = myClient.readString();
+    JSONObject msgObj = parseJSONObject(msg);
+    player.updatePosition(msgObj);
+  }
   // Welt zeichnen
+  background(220);
+  player.draw();
 }
