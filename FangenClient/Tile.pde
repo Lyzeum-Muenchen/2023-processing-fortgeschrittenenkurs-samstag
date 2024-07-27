@@ -11,8 +11,9 @@ public class Tile {
     this.isWall = isWall;
   }
   public void draw() {
-    
+    if (isWall) {
+      fill(0);
+      rect(x, y, w, h);
+    }
   }
-
-  
 }
